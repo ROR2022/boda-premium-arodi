@@ -21,16 +21,16 @@ export function PremiumHero() {
   const images = premiumDemoData.hero.backgroundImages
   const settings = premiumDemoData.hero.carouselSettings
 
-  // YouTube Audio Hook
+  // YouTube Audio Hook (solo si está configurado para YouTube)
   const {
     isReady: isYouTubeReady,
     play: playYouTube,
     pause: pauseYouTube,
     error: youtubeError
   } = useYouTubeAudio({
-    videoId: premiumDemoData.music.youtube.videoId,
+    videoId: premiumDemoData.music.source === 'youtube' ? premiumDemoData.music.youtube.videoId : '',
     startTime: premiumDemoData.music.youtube.startTime,
-    alternatives: premiumDemoData.music.youtube.alternatives,
+    alternatives: premiumDemoData.music.source === 'youtube' ? premiumDemoData.music.youtube.alternatives : [],
     loop: premiumDemoData.music.loop,
     onError: (error) => {
       console.error('YouTube Audio Error:', error)
@@ -39,9 +39,10 @@ export function PremiumHero() {
     }
   })
 
-  // Inicializar audio local como fallback
+  // Inicializar audio local (si está configurado como local o como fallback)
   useEffect(() => {
-    if (useLocalAudio && !audioElement) {
+    if ((premiumDemoData.music.source === 'local' || useLocalAudio) && !audioElement) {
+      console.log('Inicializando audio local...')
       const audio = new Audio(premiumDemoData.music.track)
       audio.loop = premiumDemoData.music.loop
       audio.preload = 'auto'
@@ -53,6 +54,13 @@ export function PremiumHero() {
       }
     }
   }, [useLocalAudio, audioElement])
+
+  // Activar audio local automáticamente si está configurado
+  useEffect(() => {
+    if (premiumDemoData.music.source === 'local') {
+      setUseLocalAudio(true)
+    }
+  }, [])
 
   // Timeout para fallback automático si YouTube no se carga
   useEffect(() => {
@@ -195,7 +203,7 @@ export function PremiumHero() {
           }`}></div>
           <span className="text-sm opacity-80">
             {isPlaying ? 'Música romántica reproduciéndose' :
-             useLocalAudio ? 'Audio local disponible' :
+             useLocalAudio ? 'Audio de alta calidad disponible' :
              isYouTubeReady ? 'Audio YouTube disponible' :
              'Cargando música...'}
           </span>

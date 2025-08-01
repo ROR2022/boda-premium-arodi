@@ -42,7 +42,7 @@ export const premiumDemoData = {
   // Configuración de música premium
   music: {
     title: "Música Romántica",
-    source: "youtube",
+    source: "local", // Cambiar temporalmente a local para garantizar funcionamiento
     youtube: {
       videoId: "P9iKATG9BW4", // Background Music For Wedding Videos - Romantic Piano
       startTime: 10,
