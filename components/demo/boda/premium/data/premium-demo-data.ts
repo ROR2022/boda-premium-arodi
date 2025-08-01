@@ -44,8 +44,13 @@ export const premiumDemoData = {
     title: "Música Romántica",
     source: "youtube",
     youtube: {
-      videoId: "F-m9ULACekw",
-      startTime: 26
+      videoId: "P9iKATG9BW4", // Background Music For Wedding Videos - Romantic Piano
+      startTime: 10,
+      alternatives: [
+        { videoId: "Lg4fNsPSfhU", startTime: 5 }, // Romantic Piano Background Music
+        { videoId: "4QbPKGBYZcw", startTime: 15 }, // Beautiful Romantic Piano Love Songs
+        { videoId: "D_RY4LIlIt8", startTime: 20 }  // Most Romantic Piano Love Songs
+      ]
     },
     track: "/music/romantic-wedding1.mp3", // Fallback
     autoplay: false, // Por UX, mejor no autoplay automático

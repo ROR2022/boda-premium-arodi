@@ -30,6 +30,7 @@ export function PremiumHero() {
   } = useYouTubeAudio({
     videoId: premiumDemoData.music.youtube.videoId,
     startTime: premiumDemoData.music.youtube.startTime,
+    alternatives: premiumDemoData.music.youtube.alternatives,
     loop: premiumDemoData.music.loop,
     onError: (error) => {
       console.error('YouTube Audio Error:', error)

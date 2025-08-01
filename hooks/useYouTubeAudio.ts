@@ -13,6 +13,7 @@ interface UseYouTubeAudioOptions {
   videoId: string
   startTime?: number
   loop?: boolean
+  alternatives?: Array<{ videoId: string; startTime: number }>
   onReady?: () => void
   onError?: (error: any) => void
 }
@@ -21,6 +22,7 @@ export function useYouTubeAudio({
   videoId,
   startTime = 0,
   loop = true,
+  alternatives = [],
   onReady,
   onError
 }: UseYouTubeAudioOptions) {
@@ -28,6 +30,9 @@ export function useYouTubeAudio({
   const [isReady, setIsReady] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const [error, setError] = useState<string | null>(null)
+  const [currentVideoIndex, setCurrentVideoIndex] = useState(-1) // -1 = main video
+  const [currentVideoId, setCurrentVideoId] = useState(videoId)
+  const [currentStartTime, setCurrentStartTime] = useState(startTime)
 
   // Inicializar YouTube player
   const initializePlayer = useCallback(() => {
@@ -45,7 +50,7 @@ export function useYouTubeAudio({
       const ytPlayer = new window.YT.Player('youtube-audio-player', {
         height: '0',
         width: '0',
-        videoId: videoId,
+        videoId: currentVideoId,
         playerVars: {
           autoplay: 0,
           controls: 0,
@@ -56,7 +61,7 @@ export function useYouTubeAudio({
           modestbranding: 1,
           playsinline: 1,
           rel: 0,
-          start: startTime,
+          start: currentStartTime,
           origin: window.location.origin, // Importante para CORS
           widget_referrer: window.location.origin
         },
@@ -100,7 +105,34 @@ export function useYouTubeAudio({
                 errorMessage = `Código de error: ${event.data}`
             }
             
-            console.error('YouTube Error:', errorMessage, event.data)
+            console.error('YouTube Error Details:', {
+              code: event.data,
+              message: errorMessage,
+              videoId: currentVideoId,
+              attemptedIndex: currentVideoIndex
+            })
+
+            // Intentar video alternativo
+            if (currentVideoIndex < alternatives.length - 1) {
+              const nextIndex = currentVideoIndex + 1
+              const nextVideo = alternatives[nextIndex]
+              console.log(`Intentando video alternativo ${nextIndex + 1}/${alternatives.length}:`, nextVideo.videoId)
+              
+              setCurrentVideoIndex(nextIndex)
+              setCurrentVideoId(nextVideo.videoId)
+              setCurrentStartTime(nextVideo.startTime)
+              setPlayer(null)
+              setIsReady(false)
+              setError(null)
+              
+              // Reinicializar con nuevo video
+              setTimeout(() => {
+                initializePlayer()
+              }, 1000)
+              return
+            }
+
+            // No hay más alternativas, mostrar error y activar fallback
             setError(errorMessage)
             onError?.(event.data)
           }
@@ -112,7 +144,7 @@ export function useYouTubeAudio({
       onError?.(err)
       console.error(errorMessage, err)
     }
-  }, [videoId, startTime, loop, onReady, onError])
+  }, [currentVideoId, currentStartTime, loop, onReady, onError, alternatives, currentVideoIndex])
 
   // Esperar a que YouTube API esté disponible
   useEffect(() => {
