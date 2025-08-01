@@ -42,7 +42,12 @@ export const premiumDemoData = {
   // Configuración de música premium
   music: {
     title: "Música Romántica",
-    track: "/music/romantic-wedding1.mp3",
+    source: "youtube",
+    youtube: {
+      videoId: "F-m9ULACekw",
+      startTime: 26
+    },
+    track: "/music/romantic-wedding1.mp3", // Fallback
     autoplay: false, // Por UX, mejor no autoplay automático
     loop: true,
     description: "Música romántica para nuestro día especial"

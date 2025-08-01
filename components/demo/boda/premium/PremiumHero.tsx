@@ -3,6 +3,8 @@
 import { useEffect, useState } from 'react'
 import { ChevronLeft, ChevronRight } from 'lucide-react'
 import { useMusicContext } from '@/context/music-context'
+import { useYouTubeAudio } from '@/hooks/useYouTubeAudio'
+import { YouTubeAudioPlayer } from '@/components/YouTubeAudioPlayer'
 import { premiumDemoData } from './data/premium-demo-data'
 
 export function PremiumHero() {
@@ -12,23 +14,95 @@ export function PremiumHero() {
   const [currentImageIndex, setCurrentImageIndex] = useState(0)
   const [isTransitioning, setIsTransitioning] = useState(false)
   
+  // Estado del reproductor de audio
+  const [audioElement, setAudioElement] = useState<HTMLAudioElement | null>(null)
+  const [useLocalAudio, setUseLocalAudio] = useState(false)
+  
   const images = premiumDemoData.hero.backgroundImages
   const settings = premiumDemoData.hero.carouselSettings
 
-  // Cargar música cuando el componente se monta
+  // YouTube Audio Hook
+  const {
+    isReady: isYouTubeReady,
+    play: playYouTube,
+    pause: pauseYouTube,
+    error: youtubeError
+  } = useYouTubeAudio({
+    videoId: premiumDemoData.music.youtube.videoId,
+    startTime: premiumDemoData.music.youtube.startTime,
+    loop: premiumDemoData.music.loop,
+    onError: (error) => {
+      console.error('YouTube Audio Error:', error)
+      console.log('Activando fallback a audio local...')
+      setUseLocalAudio(true)
+    }
+  })
+
+  // Inicializar audio local como fallback
   useEffect(() => {
-    const audio = new Audio(premiumDemoData.music.track)
-    audio.loop = premiumDemoData.music.loop
-    
-    if (isPlaying) {
-      audio.play().catch(console.error)
+    if (useLocalAudio && !audioElement) {
+      const audio = new Audio(premiumDemoData.music.track)
+      audio.loop = premiumDemoData.music.loop
+      audio.preload = 'auto'
+      setAudioElement(audio)
+      
+      return () => {
+        audio.pause()
+        audio.currentTime = 0
+      }
+    }
+  }, [useLocalAudio, audioElement])
+
+  // Timeout para fallback automático si YouTube no se carga
+  useEffect(() => {
+    if (!useLocalAudio && !isYouTubeReady && !youtubeError) {
+      const fallbackTimer = setTimeout(() => {
+        console.log('YouTube timeout - activando fallback automático a audio local')
+        setUseLocalAudio(true)
+      }, 5000) // 5 segundos timeout
+
+      return () => clearTimeout(fallbackTimer)
+    }
+  }, [useLocalAudio, isYouTubeReady, youtubeError])
+
+  // Controlar reproducción de audio (YouTube o local)
+  useEffect(() => {
+    if (useLocalAudio && audioElement) {
+      // Usar audio local
+      console.log('Usando audio local:', isPlaying ? 'play' : 'pause')
+      if (isPlaying) {
+        audioElement.play().catch(console.error)
+      } else {
+        audioElement.pause()
+      }
+      return
     }
 
-    return () => {
-      audio.pause()
-      audio.currentTime = 0
+    // Usar YouTube
+    if (!isYouTubeReady) {
+      console.log('YouTube not ready yet, waiting...')
+      return
     }
-  }, [isPlaying])
+
+    if (youtubeError) {
+      console.error('YouTube error detected, switching to local audio:', youtubeError)
+      setUseLocalAudio(true)
+      return
+    }
+
+    // Pequeño delay para asegurar que el player esté completamente listo
+    const timer = setTimeout(() => {
+      if (isPlaying) {
+        console.log('Attempting to play YouTube audio...')
+        playYouTube()
+      } else {
+        console.log('Attempting to pause YouTube audio...')
+        pauseYouTube()
+      }
+    }, 100)
+
+    return () => clearTimeout(timer)
+  }, [isPlaying, isYouTubeReady, playYouTube, pauseYouTube, youtubeError, useLocalAudio, audioElement])
 
   // Auto-avance del carrusel
   useEffect(() => {
@@ -113,9 +187,16 @@ export function PremiumHero() {
 
         {/* Indicador de música */}
         <div className="mt-6 flex items-center justify-center gap-2">
-          <div className={`w-3 h-3 rounded-full ${isPlaying ? 'bg-pink-400 animate-pulse' : 'bg-gray-400'}`}></div>
+          <div className={`w-3 h-3 rounded-full ${
+            isPlaying ? 'bg-pink-400 animate-pulse' : 
+            (useLocalAudio || isYouTubeReady) ? 'bg-gray-400' :
+            'bg-yellow-400'
+          }`}></div>
           <span className="text-sm opacity-80">
-            {isPlaying ? 'Música romántica reproduciéndose' : 'Música disponible'}
+            {isPlaying ? 'Música romántica reproduciéndose' :
+             useLocalAudio ? 'Audio local disponible' :
+             isYouTubeReady ? 'Audio YouTube disponible' :
+             'Cargando música...'}
           </span>
         </div>
       </div>
@@ -184,6 +265,9 @@ export function PremiumHero() {
           ))}
         </div>
       )}
+
+      {/* YouTube Audio Player (invisible) */}
+      <YouTubeAudioPlayer />
     </section>
   )
 } 
