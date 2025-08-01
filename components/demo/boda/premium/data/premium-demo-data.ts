@@ -52,7 +52,7 @@ export const premiumDemoData = {
         { videoId: "D_RY4LIlIt8", startTime: 20 }  // Most Romantic Piano Love Songs
       ]
     },
-    track: "/music/romantic-wedding1.mp3", // Fallback
+    track: "/images/custom/contigo.mp3", // Fallback
     autoplay: false, // Por UX, mejor no autoplay automático
     loop: true,
     description: "Música romántica para nuestro día especial"
