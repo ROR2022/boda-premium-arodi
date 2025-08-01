@@ -1,41 +1,41 @@
 // Datos demo para el paquete básico de boda
 export const basicDemoData = {
   hero: {
-    name: "Ana & Carlos",
+    name: "Vero & Arodi",
     subtitle: "¡Nos Casamos!",
     backgroundImage: "/images/boda/boda1.jpeg"
   },
   
   event: {
     celebrants: {
-      bride: "ANA LUCÍA MARTÍNEZ RODRÍGUEZ",
-      groom: "CARLOS EDUARDO LÓPEZ SANTIAGO"
+      bride: "MARTHA VERÓNICA RIESTRA CARRILLO",
+      groom: "ARODI INSUNZA VALDEZ"
     },
     parents: {
       brideParents: {
-        father: "ROBERTO MARTÍNEZ GARCÍA",
-        mother: "MARÍA RODRÍGUEZ FLORES"
+        father: "GREGORIO RIESTRA",
+        mother: "MARIA DE LA LUZ CARRILLO"
       },
       groomParents: {
-        father: "JOSÉ LÓPEZ HERNÁNDEZ",
-        mother: "CARMEN SANTIAGO VARGAS"
+        father: "ANTONIO INSUNZA",
+        mother: "HILDALICIA VALDEZ"
       }
     },
     date: {
-      full: "Sábado 8 de Junio 2024",
+      full: "Sábado 4 de Octubre 2025",
       day: "Sábado",
-      date: "8 de Junio 2024"
+      date: "4 de Octubre 2025"
     },
     ceremony: {
-      time: "16:00 hrs.",
-      venue: "Parroquia Nuestra Señora de Guadalupe",
-      address: "Calle Hidalgo 789, Centro, 64000 Monterrey, N.L.",
-      type: "Misa de Matrimonio"
+      time: "13:00 hrs.",
+      venue: "Casa de oración",
+      address: "Calle Gregario Barreta #2704 Col. Echeverria Guadalajara, Jal.",
+      type: "Ceremonia"
     },
     party: {
       time: "18:30 hrs.",
-      venue: "Hacienda Los Pinos",
-      address: "Carr. Nacional 789, Valle Alto, 64989 Monterrey, N.L.",
+      venue: "La Altanera",
+      address: "Av. Lázaro Cárdenas #14 Tlaquepaque, Jal.",
       type: "Recepción"
     },
     dressCode: "Formal",
@@ -43,7 +43,7 @@ export const basicDemoData = {
   },
 
   countdown: {
-    targetDate: "June 8, 2024 16:00:00",
+    targetDate: "October 4, 2025 13:00:00",
     backgroundImage: "/images/countdown-bg.jpg"
   },
 

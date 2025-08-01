@@ -1,9 +1,13 @@
 "use client"
 
-import { MapPin, Clock, Users, Heart } from 'lucide-react'
+import { useState } from 'react'
+import { MapPin, Clock, Users, Heart, Video } from 'lucide-react'
 import { basicDemoData } from './data/basic-demo-data'
+import { VideoModal } from '@/components/ui/VideoModal'
 
 export function BasicEventDetails() {
+  const [videoModalOpen, setVideoModalOpen] = useState(false)
+
   return (
     <section className="py-16 px-4 bg-white">
       <div className="max-w-4xl mx-auto">
@@ -119,16 +123,38 @@ export function BasicEventDetails() {
             
             <div className="bg-purple-50 rounded-lg p-4">
               <h4 className="font-semibold text-purple-800 mb-2">Durante la Recepción</h4>
-              <ul className="text-sm text-purple-700 space-y-1">
+              <ul className="text-sm text-purple-700 space-y-1 mb-4">
                 <li>• Coctel de bienvenida</li>
                 <li>• Cena y baile</li>
                 <li>• Mesa de regalos disponible</li>
                 <li>• Estacionamiento gratuito</li>
               </ul>
+              
+              {/* Botón destacado para ver video */}
+              <button 
+                onClick={() => setVideoModalOpen(true)}
+                className="w-full bg-gradient-to-r from-purple-600 to-purple-700 hover:from-purple-700 hover:to-purple-800 text-white font-semibold py-3 px-4 rounded-lg shadow-lg hover:shadow-xl transform hover:scale-[1.02] transition-all duration-200 focus:outline-none focus:ring-4 focus:ring-purple-300 focus:ring-offset-2 group"
+              >
+                <span className="flex items-center justify-center gap-2">
+                  <Video className="w-5 h-5 group-hover:scale-110 transition-transform duration-200" />
+                  <span>🎬 Ver Video del Lugar</span>
+                </span>
+              </button>
             </div>
           </div>
+          
+          
         </div>
       </div>
+      
+      {/* Modal de video */}
+      <VideoModal
+        isOpen={videoModalOpen}
+        onClose={() => setVideoModalOpen(false)}
+        videoSrc="/images/custom/videoArodi1.mp4"
+        title="Video del lugar - La Altanera"
+        description="Conoce el hermoso lugar donde se realizará nuestra recepción"
+      />
     </section>
   )
 } 

@@ -103,13 +103,7 @@ export function PremiumInvitation() {
           </div>
         </div>
 
-        {/* Nota del demo */}
-        <div className="mt-8 p-4 bg-purple-50 rounded-lg border border-purple-200">
-          <p className="text-sm text-purple-800 text-center">
-            <strong>💡 Demo:</strong> Esta sección premium incluye información completa de la invitación. 
-            En tu invitación real, podrás personalizar completamente el contenido y diseño.
-          </p>
-        </div>
+        
       </div>
     </section>
   )

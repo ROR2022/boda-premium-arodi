@@ -165,13 +165,7 @@ export function BasicAttendance() {
           </div>
         )}
 
-        {/* Nota del demo */}
-        <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-sm text-blue-800 text-center">
-            <strong>💡 Demo:</strong> Este formulario funciona pero no envía datos reales. 
-            En tu invitación real, las confirmaciones se enviarán directamente a tu WhatsApp.
-          </p>
-        </div>
+        
       </div>
     </section>
   )

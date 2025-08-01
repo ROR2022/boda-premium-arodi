@@ -94,13 +94,7 @@ export function BasicGiftOptions() {
           </div>
         </div>
 
-        {/* Nota del demo */}
-        <div className="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-          <p className="text-sm text-blue-800 text-center">
-            <strong>💡 Demo:</strong> Esta información es de ejemplo. 
-            En tu invitación real, podrás personalizar completamente las opciones de regalo.
-          </p>
-        </div>
+        
       </div>
     </section>
   )
