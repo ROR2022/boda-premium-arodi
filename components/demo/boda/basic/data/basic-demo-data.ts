@@ -49,7 +49,7 @@ export const basicDemoData = {
 
   attendance: {
     title: "CONFIRMACIÓN DE ASISTENCIA",
-    message: "",
+    message: "Favor de confirmar asistencia 3 semanas antes del evento",
     subtitle: "",
     fields: {
       name: "Nombre completo",

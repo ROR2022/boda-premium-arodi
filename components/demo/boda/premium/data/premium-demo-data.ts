@@ -74,32 +74,32 @@ export const premiumDemoData = {
     { 
       role: "Padrinos de Lazo", 
       names: ["Enedina Riestra", "Antonio Velásquez"],
-      description: "Quienes han sido como segundos padres"
+      description: ""
     },
     { 
       role: "Padrinos de Arras", 
       names: ["Herendira Riestra", "Ivan Santiago"],
-      description: "Por ser testigos de nuestro compromiso"
+      description: ""
     },
     { 
       role: "Madrina de Ramos", 
       names: ["", "Ofelia Flores"],
-      description: "Por las flores más hermosas"
+      description: ""
     },
     { 
       role: "Padrinos de Anillos", 
       names: ["Dario de los Reyes", "Mireya Velasquez"],
-      description: "Por llenar de melodía nuestra celebración"
+      description: ""
     },
     { 
       role: "Pajecitos", 
       names: ["Flavia Vazquez", "Kehlani Salmon"],
-      description: "Por hacer mágico nuestro primer vals"
+      description: ""
     },
     { 
       role: "Agradecemos a", 
       names: ["Tania", "Roberto y Caroline", "Olga", "Juanita", "Enriqueta", "Felix", "Gregorio", "Lidia", "Hannah","Meli", "Maria de la Luz"],
-      description: "Por bendecir nuestra unión"
+      description: ""
     }
   ],
   
