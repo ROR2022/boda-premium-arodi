@@ -52,7 +52,7 @@ export const premiumDemoData = {
         { videoId: "D_RY4LIlIt8", startTime: 20 }  // Most Romantic Piano Love Songs
       ]
     },
-    track: "/images/custom/contigo.mp3", // Fallback
+    track: "/images/custom/Por_Ti_Me_Casare.mp3", // Fallback
     autoplay: false, // Por UX, mejor no autoplay automático
     loop: true,
     description: "Música romántica para nuestro día especial"
@@ -73,27 +73,27 @@ export const premiumDemoData = {
   padrinos: [
     { 
       role: "Padrinos de Lazo", 
-      names: ["Enedina Velázquez", "Antonio Velázquez"],
+      names: ["Enedina Riestra", "Antonio Velásquez"],
       description: "Quienes han sido como segundos padres"
     },
     { 
-      role: "Padrinos de Arraz", 
-      names: ["Erendira Santiago", "Ivan Santiago"],
+      role: "Padrinos de Arras", 
+      names: ["Herendira Santiago", "Ivan Santiago"],
       description: "Por ser testigos de nuestro compromiso"
     },
     { 
       role: "Madrina de Ramos", 
-      names: ["", "Ofelia"],
+      names: ["", "Ofelia Flores"],
       description: "Por las flores más hermosas"
     },
     { 
       role: "Padrinos de Anillos", 
-      names: ["Dario", "Mireya"],
+      names: ["Dario de los Reyes", "Mireya Velasquez"],
       description: "Por llenar de melodía nuestra celebración"
     },
     { 
       role: "Pajecitos", 
-      names: ["Flavia", "Kehlani"],
+      names: ["Flavia Vazquez", "Kehlani Salmon"],
       description: "Por hacer mágico nuestro primer vals"
     },
     { 

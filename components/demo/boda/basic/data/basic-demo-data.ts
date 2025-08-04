@@ -3,54 +3,54 @@ export const basicDemoData = {
   hero: {
     name: "Vero & Arodi",
     subtitle: "¡Nos Casamos!",
-    backgroundImage: "/images/boda/boda1.jpeg"
+    backgroundImage: "/images/boda/boda1.jpeg",
   },
-  
+
   event: {
     celebrants: {
       bride: "MARTHA VERÓNICA RIESTRA CARRILLO",
-      groom: "ARODI INSUNZA VALDEZ"
+      groom: "ARODI INZUNZA VALDEZ",
     },
     parents: {
       brideParents: {
         father: "GREGORIO RIESTRA",
-        mother: "MARIA DE LA LUZ CARRILLO"
+        mother: "MARIA DE LA LUZ CARRILLO",
       },
       groomParents: {
-        father: "ANTONIO INSUNZA",
-        mother: "HILDALICIA VALDEZ"
-      }
+        father: "ANTONIO INZUNZA",
+        mother: "HILDELISA VALDEZ PEREZ",
+      },
     },
     date: {
       full: "Sábado 4 de Octubre 2025",
       day: "Sábado",
-      date: "4 de Octubre 2025"
+      date: "4 de Octubre 2025",
     },
     ceremony: {
       time: "13:00 hrs.",
-      venue: "Casa de oración",
+      venue: "Templo Eden de los Jardines de Maria",
       address: "Calle Gregario Barreta #2704 Col. Echeverria Guadalajara, Jal.",
-      type: "Ceremonia"
+      type: "Ceremonia",
     },
     party: {
       time: "18:30 hrs.",
       venue: "La Altanera",
       address: "Av. Lázaro Cárdenas #14 Tlaquepaque, Jal.",
-      type: "Recepción"
+      type: "Recepción",
     },
     dressCode: "Formal",
-    restrictions: "No Niños"
+    restrictions: "",
   },
 
   countdown: {
     targetDate: "October 4, 2025 13:00:00",
-    backgroundImage: "/images/countdown-bg.jpg"
+    backgroundImage: "/images/countdown-bg.jpg",
   },
 
   attendance: {
     title: "CONFIRMACIÓN DE ASISTENCIA",
-    message: "Respetuosamente <No Niños>",
-    subtitle: "Esperamos que no sea impedimento para que puedan acompañarnos en este día tan especial.",
+    message: "",
+    subtitle: "",
     fields: {
       name: "Nombre completo",
       response: "¿Podrás acompañarnos?",
@@ -58,34 +58,29 @@ export const basicDemoData = {
       phone: "Número de celular",
       responseOptions: {
         yes: "¡Claro, ahí estaré!",
-        no: "Lo siento, no podré asistir."
-      }
-    }
+        no: "Lo siento, no podré asistir.",
+      },
+    },
   },
 
   gifts: {
     title: "OPCIONES DE REGALO",
-    message: "Su presencia es nuestro mejor regalo, pero si desean obsequiarnos algo, pueden considerar las siguientes opciones:",
+    message:
+      "Su presencia es nuestro mejor regalo, pero si desean obsequiarnos algo, pueden considerar las siguientes opciones:",
     options: [
-      {
-        icon: "💳",
-        title: "Transferencia Bancaria",
-        description: "BBVA Bancomer",
-        details: "Cuenta: 1234567890\nCLABE: 012345678901234567\nA nombre de: Ana Lucía Martínez Rodríguez"
-      },
-      {
-        icon: "🎁",
-        title: "Mesa de Regalos",
-        description: "Liverpool",
-        details: "Evento: Boda Ana & Carlos\nCódigo: 51234567"
-      },
       {
         icon: "💰",
         title: "Sobre con efectivo",
         description: "El día del evento",
-        details: "Pueden entregarlo en la recepción"
-      }
-    ]
+        details: "Pueden entregarlo en la recepción",
+      },
+      {
+        icon: "🎁",
+        title: "Regalo Sorpresa",
+        description: "El día del evento",
+        details: "Pueden entregarlo en la recepción o en la casa de oración",
+      },
+    ],
   },
 
   demo: {
@@ -93,18 +88,18 @@ export const basicDemoData = {
     description: "Esta es una demostración del paquete básico",
     features: [
       "Cuenta Regresiva",
-      "Cuándo y dónde", 
+      "Cuándo y dónde",
       "Confirmación de asistencia",
       "Opciones de regalo",
-      "Código de vestimenta"
+      "Código de vestimenta",
     ],
     cta: {
       title: "¿Te gusta este paquete?",
       subtitle: "Incluye todas las características esenciales para tu boda",
       buttonText: "Contratar Paquete Básico - $299",
-      link: "/#pricing"
-    }
-  }
-}
+      link: "/#pricing",
+    },
+  },
+};
 
-export type BasicDemoData = typeof basicDemoData 
+export type BasicDemoData = typeof basicDemoData;
