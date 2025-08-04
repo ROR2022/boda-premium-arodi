@@ -78,7 +78,7 @@ export const premiumDemoData = {
     },
     { 
       role: "Padrinos de Arras", 
-      names: ["Herendira Santiago", "Ivan Santiago"],
+      names: ["Herendira Riestra", "Ivan Santiago"],
       description: "Por ser testigos de nuestro compromiso"
     },
     { 
