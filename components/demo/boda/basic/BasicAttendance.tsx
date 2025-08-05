@@ -12,21 +12,69 @@ export function BasicAttendance() {
     phone: ''
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
+  const [errors, setErrors] = useState({
+    name: '',
+    response: '',
+    phone: '',
+    general: ''
+  })
+  const [touched, setTouched] = useState({
+    name: false,
+    response: false,
+    phone: false
+  })
 
   const validateForm = (): boolean => {
+    const newErrors = {
+      name: '',
+      response: '',
+      phone: '',
+      general: ''
+    }
+
+    let isValid = true
+
+    // Validar nombre
     if (!formData.name.trim()) {
-      alert('Por favor ingresa tu nombre')
-      return false
+      newErrors.name = 'El nombre es obligatorio'
+      isValid = false
     }
+
+    // Validar respuesta
     if (!formData.response) {
-      alert('Por favor selecciona si podrás asistir o no')
-      return false
+      newErrors.response = 'Debes seleccionar si podrás asistir o no'
+      isValid = false
     }
+
+    // Validar teléfono
     if (!formData.phone.trim()) {
-      alert('Por favor ingresa tu número de teléfono')
-      return false
+      newErrors.phone = 'El número de teléfono es obligatorio'
+      isValid = false
+    } else if (formData.phone.trim().length < 10) {
+      newErrors.phone = 'El número de teléfono debe tener al menos 10 dígitos'
+      isValid = false
     }
-    return true
+
+    // Mensaje general
+    if (!isValid) {
+      const missingFields = []
+      if (newErrors.name) missingFields.push('Nombre')
+      if (newErrors.response) missingFields.push('Respuesta de asistencia')
+      if (newErrors.phone) missingFields.push('Teléfono')
+      
+      newErrors.general = `Por favor completa: ${missingFields.join(', ')}`
+    }
+
+    setErrors(newErrors)
+    
+    // Marcar todos los campos como "touched" para mostrar errores
+    setTouched({
+      name: true,
+      response: true,
+      phone: true
+    })
+
+    return isValid
   }
 
   const handleSubmit = (e: React.MouseEvent, recipient: 'groom' | 'bride') => {
@@ -122,6 +170,33 @@ ${greeting} ${contact.flag}
 
   const handleInputChange = (field: string, value: string) => {
     setFormData(prev => ({ ...prev, [field]: value }))
+    
+    // Limpiar error cuando el usuario empiece a escribir
+    if (errors[field as keyof typeof errors]) {
+      setErrors(prev => ({ ...prev, [field]: '' }))
+    }
+    
+    // Limpiar mensaje general si se está llenando un campo faltante
+    if (errors.general) {
+      setErrors(prev => ({ ...prev, general: '' }))
+    }
+  }
+
+  const handleFieldFocus = (field: string) => {
+    setTouched(prev => ({ ...prev, [field]: true }))
+  }
+
+  const handleFieldBlur = (field: string) => {
+    // Validar campo individual al perder el foco
+    if (field === 'name' && !formData.name.trim() && touched.name) {
+      setErrors(prev => ({ ...prev, name: 'El nombre es obligatorio' }))
+    } else if (field === 'phone' && touched.phone) {
+      if (!formData.phone.trim()) {
+        setErrors(prev => ({ ...prev, phone: 'El número de teléfono es obligatorio' }))
+      } else if (formData.phone.trim().length < 10) {
+        setErrors(prev => ({ ...prev, phone: 'El número debe tener al menos 10 dígitos' }))
+      }
+    }
   }
 
   return (
@@ -166,37 +241,67 @@ ${greeting} ${contact.flag}
           
         </div>
 
+        {/* Mensaje de estado general */}
+        {errors.general && (
+          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+            <div className="flex items-center gap-2 text-red-700">
+              <XCircle className="w-5 h-5" />
+              <span className="font-medium">Formulario incompleto</span>
+            </div>
+            <p className="text-red-600 text-sm mt-1">{errors.general}</p>
+          </div>
+        )}
+
         {/* Formulario */}
         {!isSubmitted ? (
           <div className="bg-white rounded-2xl shadow-xl p-8">
             {/* Nombre */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {basicDemoData.attendance.fields.name}
+                {basicDemoData.attendance.fields.name} <span className="text-red-500">*</span>
               </label>
               <input
                 type="text"
                 value={formData.name}
                 onChange={(e) => handleInputChange('name', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onFocus={() => handleFieldFocus('name')}
+                onBlur={() => handleFieldBlur('name')}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors ${
+                  errors.name 
+                    ? 'border-red-300 focus:ring-red-500 bg-red-50' 
+                    : 'border-gray-300 focus:ring-blue-500'
+                }`}
                 placeholder="Ej: María González"
                 required
               />
+              {errors.name && (
+                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                  <XCircle className="w-4 h-4" />
+                  {errors.name}
+                </p>
+              )}
             </div>
 
             {/* Respuesta */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {basicDemoData.attendance.fields.response}
+                {basicDemoData.attendance.fields.response} <span className="text-red-500">*</span>
               </label>
-              <div className="grid grid-cols-2 gap-4">
+              <div className={`grid grid-cols-2 gap-4 ${
+                errors.response ? 'ring-2 ring-red-200 rounded-lg p-1' : ''
+              }`}>
                 <button
                   type="button"
-                  onClick={() => handleInputChange('response', 'yes')}
+                  onClick={() => {
+                    handleInputChange('response', 'yes')
+                    setTouched(prev => ({ ...prev, response: true }))
+                  }}
                   className={`p-4 rounded-lg border-2 transition-all ${
                     formData.response === 'yes'
                       ? 'border-green-500 bg-green-50 text-green-700'
-                      : 'border-gray-300 hover:border-green-300'
+                      : errors.response
+                        ? 'border-red-300 hover:border-red-400 bg-red-50'
+                        : 'border-gray-300 hover:border-green-300'
                   }`}
                 >
                   <div className="flex items-center justify-center gap-2">
@@ -207,11 +312,16 @@ ${greeting} ${contact.flag}
                 
                 <button
                   type="button"
-                  onClick={() => handleInputChange('response', 'no')}
+                  onClick={() => {
+                    handleInputChange('response', 'no')
+                    setTouched(prev => ({ ...prev, response: true }))
+                  }}
                   className={`p-4 rounded-lg border-2 transition-all ${
                     formData.response === 'no'
                       ? 'border-red-500 bg-red-50 text-red-700'
-                      : 'border-gray-300 hover:border-red-300'
+                      : errors.response
+                        ? 'border-red-300 hover:border-red-400 bg-red-50'
+                        : 'border-gray-300 hover:border-red-300'
                   }`}
                 >
                   <div className="flex items-center justify-center gap-2">
@@ -220,6 +330,12 @@ ${greeting} ${contact.flag}
                   </div>
                 </button>
               </div>
+              {errors.response && (
+                <p className="text-red-600 text-sm mt-2 flex items-center gap-1">
+                  <XCircle className="w-4 h-4" />
+                  {errors.response}
+                </p>
+              )}
             </div>
 
             {/* Acompañantes */}
@@ -241,16 +357,77 @@ ${greeting} ${contact.flag}
             {/* Teléfono */}
             <div className="mb-8">
               <label className="block text-sm font-medium text-gray-700 mb-2">
-                {basicDemoData.attendance.fields.phone}
+                {basicDemoData.attendance.fields.phone} <span className="text-red-500">*</span>
               </label>
               <input
                 type="tel"
                 value={formData.phone}
                 onChange={(e) => handleInputChange('phone', e.target.value)}
-                className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                onFocus={() => handleFieldFocus('phone')}
+                onBlur={() => handleFieldBlur('phone')}
+                className={`w-full px-4 py-3 border rounded-lg focus:ring-2 focus:border-transparent transition-colors ${
+                  errors.phone 
+                    ? 'border-red-300 focus:ring-red-500 bg-red-50' 
+                    : 'border-gray-300 focus:ring-blue-500'
+                }`}
                 placeholder="Ej: 777 123 4567"
                 required
               />
+              {errors.phone && (
+                <p className="text-red-600 text-sm mt-1 flex items-center gap-1">
+                  <XCircle className="w-4 h-4" />
+                  {errors.phone}
+                </p>
+              )}
+            </div>
+
+            {/* Indicador de progreso */}
+            <div className="mb-6 p-4 bg-gray-50 rounded-lg">
+              <p className="text-sm font-medium text-gray-700 mb-3">Progreso del formulario:</p>
+              <div className="space-y-2">
+                <div className="flex items-center gap-2">
+                  {formData.name.trim() ? (
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                  ) : (
+                    <XCircle className="w-4 h-4 text-gray-400" />
+                  )}
+                  <span className={`text-sm ${formData.name.trim() ? 'text-green-700' : 'text-gray-500'}`}>
+                    Nombre completo
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {formData.response ? (
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                  ) : (
+                    <XCircle className="w-4 h-4 text-gray-400" />
+                  )}
+                  <span className={`text-sm ${formData.response ? 'text-green-700' : 'text-gray-500'}`}>
+                    Respuesta de asistencia
+                  </span>
+                </div>
+                <div className="flex items-center gap-2">
+                  {formData.phone.trim() ? (
+                    <CheckCircle className="w-4 h-4 text-green-600" />
+                  ) : (
+                    <XCircle className="w-4 h-4 text-gray-400" />
+                  )}
+                  <span className={`text-sm ${formData.phone.trim() ? 'text-green-700' : 'text-gray-500'}`}>
+                    Número de teléfono
+                  </span>
+                </div>
+                {formData.response === 'yes' && (
+                  <div className="flex items-center gap-2">
+                    {formData.companions.trim() ? (
+                      <CheckCircle className="w-4 h-4 text-green-600" />
+                    ) : (
+                      <div className="w-4 h-4 rounded-full border-2 border-gray-300"></div>
+                    )}
+                    <span className={`text-sm ${formData.companions.trim() ? 'text-green-700' : 'text-gray-500'}`}>
+                      Acompañantes (opcional)
+                    </span>
+                  </div>
+                )}
+              </div>
             </div>
 
             {/* Botones de envío */}
