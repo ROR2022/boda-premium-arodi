@@ -162,27 +162,8 @@ ${greeting} ${contact.flag}
             </div>
           </div>
           
-          {/* Botones de prueba temporal */}
-          <div className="mt-3 flex gap-2 justify-center">
-            <button
-              onClick={() => {
-                const testMessage = "🧪 PRUEBA - Verificando número del novio"
-                sendWhatsAppMessage(testMessage, 'groom')
-              }}
-              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
-            >
-              🧪 Probar Novio
-            </button>
-            <button
-              onClick={() => {
-                const testMessage = "🧪 PRUEBA - Verificando número de la novia"
-                sendWhatsAppMessage(testMessage, 'bride')
-              }}
-              className="bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
-            >
-              🧪 Probar Novia
-            </button>
-          </div>
+          
+          
         </div>
 
         {/* Formulario */}
