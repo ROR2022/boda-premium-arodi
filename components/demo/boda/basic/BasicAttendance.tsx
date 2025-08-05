@@ -65,7 +65,7 @@ ${greeting} ${contact.flag}
 💒 *Asistencia:* ${attendanceStatus}${companionsText}
 
 📅 *Fecha:* Sábado 4 de Octubre 2025
-⛪ *Ceremonia:* 13:00 hrs - Casa de oración
+⛪ *Ceremonia:* 13:00 hrs - Templo Eden de los Jardines de Maria
 🎉 *Recepción:* 18:30 hrs - La Altanera
 
 ¡Gracias por confirmar! 💕`
