@@ -13,26 +13,52 @@ export function BasicAttendance() {
   })
   const [isSubmitted, setIsSubmitted] = useState(false)
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const validateForm = (): boolean => {
+    if (!formData.name.trim()) {
+      alert('Por favor ingresa tu nombre')
+      return false
+    }
+    if (!formData.response) {
+      alert('Por favor selecciona si podrás asistir o no')
+      return false
+    }
+    if (!formData.phone.trim()) {
+      alert('Por favor ingresa tu número de teléfono')
+      return false
+    }
+    return true
+  }
+
+  const handleSubmit = (e: React.MouseEvent, recipient: 'groom' | 'bride') => {
     e.preventDefault()
     
+    // Validar formulario
+    if (!validateForm()) {
+      return
+    }
+    
     // Formatear mensaje para WhatsApp
-    const message = formatWhatsAppMessage(formData)
+    const message = formatWhatsAppMessage(formData, recipient)
     
     // Enviar por WhatsApp
-    sendWhatsAppMessage(message)
+    sendWhatsAppMessage(message, recipient)
     
     // Mostrar confirmación
     setIsSubmitted(true)
   }
 
-  const formatWhatsAppMessage = (data: typeof formData) => {
+  const formatWhatsAppMessage = (data: typeof formData, recipient: 'groom' | 'bride') => {
     const attendanceStatus = data.response === 'yes' ? '✅ SÍ ASISTIRÉ' : '❌ NO PODRÉ ASISTIR'
     const companionsText = data.response === 'yes' && data.companions 
       ? `\n👥 *Acompañantes:* ${data.companions}` 
       : ''
     
+    const contact = phoneNumbers[recipient]
+    const greeting = recipient === 'groom' ? 'Hola Arodi!' : 'Hola Vero!'
+    
     return `🎊 *CONFIRMACIÓN DE ASISTENCIA - BODA VERO & ARODI* 🎊
+
+${greeting} ${contact.flag}
 
 👤 *Nombre:* ${data.name}
 📞 *Teléfono:* ${data.phone}
@@ -45,10 +71,50 @@ export function BasicAttendance() {
 ¡Gracias por confirmar! 💕`
   }
 
-  const sendWhatsAppMessage = (message: string) => {
-    const phoneNumber = '5233238241535' // +52 33 2382 4153 (formato internacional sin + y espacios)
+  const phoneNumbers = {
+    groom: {
+      number: '523323824153', // +52 33 2382 4153 (México)
+      display: '+52 33 2382 4153',
+      name: 'Novio (Arodi)',
+      flag: '🇲🇽'
+    },
+    bride: {
+      number: '18159806513', // +1 815 980 6513 (USA)
+      display: '+1 815 980 6513', 
+      name: 'Novia (Vero)',
+      flag: '🇺🇸'
+    }
+  }
+
+  const validatePhoneNumber = (phone: string, country: 'mexico' | 'usa'): boolean => {
+    const cleanPhone = phone.replace(/\D/g, '') // Solo dígitos
+    
+    if (country === 'mexico') {
+      // México: 52 + código área + número = 12 dígitos
+      return cleanPhone.length === 12 && cleanPhone.startsWith('52')
+    } else {
+      // USA: 1 + código área + número = 11 dígitos  
+      return cleanPhone.length === 11 && cleanPhone.startsWith('1')
+    }
+  }
+
+  const sendWhatsAppMessage = (message: string, recipient: 'groom' | 'bride') => {
+    const contact = phoneNumbers[recipient]
+    const country = recipient === 'groom' ? 'mexico' : 'usa'
+    
+    // Validar formato del número
+    if (!validatePhoneNumber(contact.number, country)) {
+      console.error('❌ Error: Formato de número inválido para', contact.name)
+      alert(`Error en el número de WhatsApp de ${contact.name}. Contacta al administrador.`)
+      return
+    }
+    
     const encodedMessage = encodeURIComponent(message)
-    const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`
+    const whatsappUrl = `https://wa.me/${contact.number}?text=${encodedMessage}`
+    
+    // Debug info (remover en producción)
+    console.log(`✅ Enviando a ${contact.name}:`, contact.display)
+    console.log('📱 WhatsApp URL:', whatsappUrl)
     
     // Abrir WhatsApp en nueva ventana
     window.open(whatsappUrl, '_blank')
@@ -85,14 +151,43 @@ export function BasicAttendance() {
             <MessageCircle className="w-5 h-5" />
             <span className="font-semibold">Integración WhatsApp Activa</span>
           </div>
-          <p className="text-green-600 text-sm mt-1">
-            Las confirmaciones se enviarán automáticamente al: +52 33 2382 4153
-          </p>
+          <div className="mt-3 grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div className="bg-white rounded-lg p-3 border">
+              <p className="text-green-700 font-semibold">🇲🇽 Novio (Arodi)</p>
+              <p className="text-green-600 text-sm">+52 33 2382 4153</p>
+            </div>
+            <div className="bg-white rounded-lg p-3 border">
+              <p className="text-green-700 font-semibold">🇺🇸 Novia (Vero)</p>
+              <p className="text-green-600 text-sm">+1 815 980 6513</p>
+            </div>
+          </div>
+          
+          {/* Botones de prueba temporal */}
+          <div className="mt-3 flex gap-2 justify-center">
+            <button
+              onClick={() => {
+                const testMessage = "🧪 PRUEBA - Verificando número del novio"
+                sendWhatsAppMessage(testMessage, 'groom')
+              }}
+              className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+            >
+              🧪 Probar Novio
+            </button>
+            <button
+              onClick={() => {
+                const testMessage = "🧪 PRUEBA - Verificando número de la novia"
+                sendWhatsAppMessage(testMessage, 'bride')
+              }}
+              className="bg-pink-600 hover:bg-pink-700 text-white px-3 py-1 rounded text-xs font-medium transition-colors"
+            >
+              🧪 Probar Novia
+            </button>
+          </div>
         </div>
 
         {/* Formulario */}
         {!isSubmitted ? (
-          <form onSubmit={handleSubmit} className="bg-white rounded-2xl shadow-xl p-8">
+          <div className="bg-white rounded-2xl shadow-xl p-8">
             {/* Nombre */}
             <div className="mb-6">
               <label className="block text-sm font-medium text-gray-700 mb-2">
@@ -177,15 +272,31 @@ export function BasicAttendance() {
               />
             </div>
 
-            {/* Botón de envío */}
-            <button
-              type="submit"
-              className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 rounded-lg font-semibold text-lg hover:from-green-600 hover:to-green-700 transition-all duration-300 shadow-lg flex items-center justify-center gap-2"
-            >
-              <MessageCircle className="w-5 h-5" />
-              Confirmar por WhatsApp
-            </button>
-          </form>
+            {/* Botones de envío */}
+            <div className="space-y-3">
+              <p className="text-center text-gray-600 font-medium">Elegir a quién confirmar:</p>
+              
+              {/* Botón Novio */}
+              <button
+                onClick={(e) => handleSubmit(e, 'groom')}
+                disabled={!formData.name || !formData.response || !formData.phone}
+                className="w-full bg-gradient-to-r from-blue-500 to-blue-600 text-white py-4 rounded-lg font-semibold text-lg hover:from-blue-600 hover:to-blue-700 transition-all duration-300 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <MessageCircle className="w-5 h-5" />
+                🇲🇽 Confirmar con el Novio (Arodi)
+              </button>
+              
+              {/* Botón Novia */}
+              <button
+                onClick={(e) => handleSubmit(e, 'bride')}
+                disabled={!formData.name || !formData.response || !formData.phone}
+                className="w-full bg-gradient-to-r from-pink-500 to-pink-600 text-white py-4 rounded-lg font-semibold text-lg hover:from-pink-600 hover:to-pink-700 transition-all duration-300 shadow-lg flex items-center justify-center gap-2 disabled:opacity-50 disabled:cursor-not-allowed"
+              >
+                <MessageCircle className="w-5 h-5" />
+                🇺🇸 Confirmar con la Novia (Vero)
+              </button>
+            </div>
+          </div>
         ) : (
           /* Mensaje de confirmación */
           <div className="bg-white rounded-2xl shadow-xl p-8 text-center">
