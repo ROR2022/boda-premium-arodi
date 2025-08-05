@@ -4,9 +4,9 @@ import { GeistMono } from 'geist/font/mono'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'Boda Arodi',
-  description: 'Boda Arodi',
-  generator: 'Boda Arodi',
+  title: 'Boda Vero & Arodi',
+  description: 'Boda Vero & Arodi',
+  generator: 'Boda Vero & Arodi',
   // Next.js 15 detecta automáticamente favicon.ico, icon.png y apple-icon.png en /app
 }
 
